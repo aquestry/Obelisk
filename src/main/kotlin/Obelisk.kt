@@ -1,7 +1,6 @@
 package dev.aquestry.obelisk
 
 import dev.aquestry.obelisk.core.Cache
-import dev.aquestry.obelisk.core.EventManager
 import dev.aquestry.obelisk.model.Settings
 import dev.aquestry.obelisk.storage.LocalSM
 import dev.aquestry.obelisk.storage.StorageManager
@@ -24,7 +23,6 @@ object Obelisk {
         }
 
         Cache.load()
-        EventManager.registerAll()
 
         logger.info("Obelisk is initialized!")
     }

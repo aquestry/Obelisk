@@ -1,7 +1,6 @@
 package dev.aquestry.obelisk.storage
 
 import dev.aquestry.obelisk.model.Group
-import dev.aquestry.obelisk.model.Settings
 import dev.aquestry.obelisk.model.User
 import java.util.UUID
 
@@ -15,5 +14,5 @@ interface StorageManager {
     suspend fun saveUser(user: User)
     suspend fun saveGroups()
     suspend fun saveGroup(group: Group)
-    suspend fun saveSettings(settings: Settings)
+    suspend fun saveSettings()
 }

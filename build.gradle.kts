@@ -15,6 +15,7 @@ dependencies {
     implementation("net.minestom:minestom:2025.07.17-1.21.8")
     implementation("org.slf4j:slf4j-simple:2.0.6")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.17.2")
 }
 
 kotlin {

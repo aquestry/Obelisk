@@ -1,48 +1,66 @@
 package dev.aquestry.obelisk.storage
 
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
+import dev.aquestry.obelisk.Obelisk
+import dev.aquestry.obelisk.core.Cache
 import dev.aquestry.obelisk.model.Group
-import dev.aquestry.obelisk.model.Settings
 import dev.aquestry.obelisk.model.User
+import java.io.File
 import java.util.UUID
 
 class LocalSM : StorageManager {
+    private val mapper = jacksonObjectMapper()
+    private val baseDir = File("./obelisk").apply { mkdirs() }
+    private val usersFile = File(baseDir, "users.json")
+    private val groupsFile = File(baseDir, "groups.json")
+    private val settingsFile = File(baseDir, "settings.json")
+
     override suspend fun loadGroups(): MutableSet<Group> {
-        TODO("Not yet implemented")
+        return if (groupsFile.exists()) mapper.readValue(groupsFile) else mutableSetOf()
     }
 
     override suspend fun loadGroup(name: String): Group? {
-        TODO("Not yet implemented")
+        return loadGroups().find { it.name == name }
     }
 
     override suspend fun loadSettings() {
-        TODO("Not yet implemented")
+        if (settingsFile.exists()) {
+            Obelisk.settings = mapper.readValue(settingsFile)
+        }
     }
 
     override suspend fun saveUsers() {
-        TODO("Not yet implemented")
+        mapper.writerWithDefaultPrettyPrinter().writeValue(usersFile, Cache.users)
     }
 
     override suspend fun loadUsers(): MutableSet<User> {
-        TODO("Not yet implemented")
+        return if (usersFile.exists()) mapper.readValue(usersFile) else mutableSetOf()
     }
 
-    override suspend fun loadUser(uuid: UUID): User {
-        TODO("Not yet implemented")
+    override suspend fun loadUser(uuid: UUID): User? {
+        return loadUsers().find { it.uuid == uuid }
     }
 
     override suspend fun saveUser(user: User) {
-        TODO("Not yet implemented")
+        val users = loadUsers()
+        users.removeIf { it.uuid == user.uuid }
+        users.add(user)
+        mapper.writerWithDefaultPrettyPrinter().writeValue(usersFile, users)
     }
 
     override suspend fun saveGroups() {
-        TODO("Not yet implemented")
+        mapper.writerWithDefaultPrettyPrinter().writeValue(groupsFile, Cache.groups)
     }
 
     override suspend fun saveGroup(group: Group) {
-        TODO("Not yet implemented")
+        val groups = loadGroups()
+        groups.removeIf { it.name == group.name }
+        groups.add(group)
+        mapper.writerWithDefaultPrettyPrinter().writeValue(groupsFile, groups)
     }
 
-    override suspend fun saveSettings(settings: Settings) {
-        TODO("Not yet implemented")
+    override suspend fun saveSettings() {
+        mapper.writerWithDefaultPrettyPrinter().writeValue(settingsFile, Obelisk.settings)
     }
 }

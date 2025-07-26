@@ -3,6 +3,7 @@ package dev.aquestry.obelisk.model
 import net.kyori.adventure.text.Component
 
 data class Config(
+    val permissions: Set<Permission>,
     val prefix: Component,
     val suffixTags: List<Component>,
     val nametagFormat: String,

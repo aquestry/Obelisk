@@ -24,7 +24,8 @@ object EventManager {
                     .replace("<prefix>", config.prefix)
                     .replace("<suffixTags>", config.suffixTags.joinToString(""))
                     .replace("<messageRaw>", miniMessage().escapeTags(event.rawMessage))
-                    .replace("messageFormatted", event.rawMessage)
+                    .replace("<messageFormatted>", event.rawMessage)
+                    .trim()
 
                 event.recipients.forEach { it.sendMessage(miniMessage().deserialize(message)) }
             }

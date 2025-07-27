@@ -16,8 +16,17 @@ class LocalSM : StorageManager {
     private val groupsFile = File(baseDir, "groups.json")
     private val settingsFile = File(baseDir, "settings.json")
 
+    private fun ensureFile(file: File, resourceName: String) {
+        if (!file.exists()) {
+            javaClass.classLoader.getResourceAsStream(resourceName)?.use { input ->
+                file.outputStream().use { output -> input.copyTo(output) }
+            }
+        }
+    }
+
     override suspend fun loadGroups(): MutableSet<Group> {
-        return if (groupsFile.exists()) mapper.readValue(groupsFile) else mutableSetOf()
+        ensureFile(groupsFile, "groups.json")
+        return mapper.readValue(groupsFile)
     }
 
     override suspend fun loadGroup(name: String): Group? {
@@ -25,9 +34,8 @@ class LocalSM : StorageManager {
     }
 
     override suspend fun loadSettings() {
-        if (settingsFile.exists()) {
-            Obelisk.settings = mapper.readValue(settingsFile)
-        }
+        ensureFile(settingsFile, "settings.json")
+        Obelisk.settings = mapper.readValue(settingsFile)
     }
 
     override suspend fun saveUsers() {
@@ -35,7 +43,8 @@ class LocalSM : StorageManager {
     }
 
     override suspend fun loadUsers(): MutableSet<User> {
-        return if (usersFile.exists()) mapper.readValue(usersFile) else mutableSetOf()
+        ensureFile(usersFile, "users.json")
+        return mapper.readValue(usersFile)
     }
 
     override suspend fun loadUser(uuid: UUID): User? {

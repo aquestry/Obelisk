@@ -1,0 +1,11 @@
+[ {
+  "name" : "default",
+  "config" : {
+    "permissions" : [ ],
+    "prefix" : "<blue>[Player]</blue>",
+    "nameFormat" : "<prefix> <username> <suffixTags>",
+    "messageFormat" : "<prefix> <username> <suffixTags>: <messageFormatted>",
+    "suffixTags" : [ ]
+  },
+  "weight" : 0
+} ]

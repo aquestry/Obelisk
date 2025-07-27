@@ -19,29 +19,29 @@ object EventManager {
                 event.isCancelled = true
 
                 val config = event.player.getConfig()
-                val template = config.messageFormat
+                val message = config.messageFormat
                     .replace("<username>", event.player.username)
+                    .replace("<prefix>", config.prefix)
+                    .replace("<suffixTags>", config.suffixTags.joinToString(""))
                     .replace("<messageRaw>", miniMessage().escapeTags(event.rawMessage))
+                    .replace("messageFormatted", event.rawMessage)
 
-                val finalComponent = miniMessage().deserialize(template)
-                    .replaceText { it.matchLiteral("<messageFormatted>").replacement(miniMessage().deserialize(event.rawMessage)) }
-                    .replaceText { it.matchLiteral("<prefix>").replacement(miniMessage().deserialize(config.prefix)) }
-                    .replaceText { it.matchLiteral("<suffixTags>").replacement(miniMessage().deserialize(config.suffixTags.joinToString())) }
-                event.recipients.forEach { it.sendMessage(finalComponent) }
+                event.recipients.forEach { it.sendMessage(miniMessage().deserialize(message)) }
             }
         }
 
         if(settings.nameFormatting) {
             eventHandler.addListener(PlayerSpawnEvent::class.java) { event ->
                 val config = event.player.getConfig()
-                val template = config.messageFormat
+
+                event.player.displayName = miniMessage().deserialize(
+                    config.nameFormat
                     .replace("<username>", event.player.username)
-
-                val finalComponent = miniMessage().deserialize(template)
-                    .replaceText { it.matchLiteral("<prefix>").replacement(miniMessage().deserialize(config.prefix)) }
-                    .replaceText { it.matchLiteral("<suffixTags>").replacement(miniMessage().deserialize(config.suffixTags.joinToString())) }
-
-                event.player.displayName = finalComponent
+                    .replace("<prefix>", config.prefix)
+                    .replace("<suffixTags>", config.suffixTags.joinToString()
+                    .trim()
+                    )
+                )
             }
         }
     }
@@ -49,7 +49,7 @@ object EventManager {
     fun Player.getConfig(): Config {
         return Cache.users.find { it.uuid == this.uuid }?.config
             ?: Cache.groups.find { it.name == "default" }?.config
-            ?: Cache.defaultGroup.config
+            ?: Cache.fallbackGroup.config
     }
 
     fun Player.hasPermission(permission: String): Boolean {

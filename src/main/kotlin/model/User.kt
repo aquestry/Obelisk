@@ -12,7 +12,7 @@ data class User(
     val config: Config
         get() {
             val highestGroup = groups.maxByOrNull { it.weight }
-                ?: Cache.defaultGroup
+                ?: Cache.fallbackGroup
 
             val base = highestGroup.config
             return Config(

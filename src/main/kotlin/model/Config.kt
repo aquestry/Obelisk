@@ -1,11 +1,9 @@
 package dev.aquestry.obelisk.model
 
-import net.kyori.adventure.text.Component
-
 data class Config(
     val permissions: Set<Permission>,
-    val prefix: Component,
-    val suffixTags: List<Component>,
-    val nametagFormat: String,
+    val prefix: String,
+    val nameFormat: String,
     val messageFormat: String,
+    val suffixTags: List<String>,
 )

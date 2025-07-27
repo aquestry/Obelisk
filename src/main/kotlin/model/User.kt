@@ -6,8 +6,8 @@ import java.util.UUID
 data class User(
     val uuid: UUID,
     val name: String,
-    val groups: MutableSet<Group>,
     val overwriteConfig: Config? = null,
+    private val groups: MutableSet<Group>
 ) {
     val config: Config
         get() {
@@ -19,7 +19,7 @@ data class User(
                 permissions = overwriteConfig?.permissions ?: base.permissions,
                 prefix = overwriteConfig?.prefix ?: base.prefix,
                 suffixTags = overwriteConfig?.suffixTags ?: base.suffixTags,
-                nametagFormat = overwriteConfig?.nametagFormat ?: base.nametagFormat,
+                nameFormat = overwriteConfig?.nameFormat ?: base.nameFormat,
                 messageFormat = overwriteConfig?.messageFormat ?: base.messageFormat
             )
         }

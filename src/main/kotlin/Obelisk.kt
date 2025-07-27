@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory
 object Obelisk {
     lateinit var storageManager: StorageManager
     lateinit var logger: Logger
-    var settings: Settings? = null
+    var settings = Settings()
 
     fun init() {
         logger = LoggerFactory.getLogger("Obelisk")
